@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allLogEntries = await getCollection('logs');
+---
+
+<Layout title="Logs de Construction">
+    <h1>Logs de Construction</h1>
+    <ul>
+        {allLogEntries.map(entry => (
+            <li>
+                <a href={`/logs/${entry.slug}`}>{entry.data.title}</a>
+                <p>Publié le: {entry.data.publishDate.toLocaleDateString('fr-FR')}</p>
+            </li>
+        ))}
+    </ul>
+</Layout>

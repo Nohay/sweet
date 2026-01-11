@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allJournalEntries = await getCollection('journal');
+---
+
+<Layout title="Journal d'Aventure">
+   <h1>Journal d'Aventure</h1>
+   <ul>
+       {allJournalEntries.map(entry => (
+           <li>
+               <a href={`/journal/${entry.slug}`}>{entry.data.title}</a>
+               <p>Publié le: {entry.data.publishDate.toLocaleDateString('fr-FR')}</p>
+           </li>
+       ))}
+   </ul>
+</Layout>
