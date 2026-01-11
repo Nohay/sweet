@@ -10,7 +10,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # On installe les dépendances du projet.
-RUN npm install
+# On utilise "npm ci" (Clean Install) qui est plus robuste pour les builds Docker.
+RUN npm ci
 
 # On copie tout le reste du code source.
 COPY . .
