@@ -4,8 +4,8 @@ services:
     # Indique à Docker Compose de construire l'image à partir du Dockerfile
     # présent dans le répertoire courant ('.').
     build: .
-    # Mappe le port 8080 de la machine hôte (votre Pi) au port 80 du conteneur (Nginx).
+    # Mappe le port 8081 de la machine hôte (votre Pi) au port 80 du conteneur (Nginx).
     ports:
-      - "80:80"
+      - "8081:80"
     # Redémarre automatiquement le conteneur s'il s'arrête (ex: après un redémarrage du Pi).
     restart: unless-stopped
