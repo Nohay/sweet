@@ -1,0 +1,11 @@
+services:
+  # Le nom de notre service, vous pouvez l'appeler comme vous voulez.
+  sweet-astro-site:
+    # Indique à Docker Compose de construire l'image à partir du Dockerfile
+    # présent dans le répertoire courant ('.').
+    build: .
+    # Mappe le port 8080 de la machine hôte (votre Pi) au port 80 du conteneur (Nginx).
+    ports:
+      - "80:80"
+    # Redémarre automatiquement le conteneur s'il s'arrête (ex: après un redémarrage du Pi).
+    restart: unless-stopped
