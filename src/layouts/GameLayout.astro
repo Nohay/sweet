@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import GameNav from '../components/ui/GameNav.astro';
 
 interface Props {
@@ -14,11 +14,11 @@ const { title } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Clone de AFK Journey avec Astro et Three.js" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width" initial-scale=1 />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-		<ViewTransitions />
+		<ClientRouter />
 	</head>
 	<body>
 		<main>
