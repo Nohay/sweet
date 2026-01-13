@@ -14,7 +14,7 @@ const { title } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Clone de AFK Journey avec Astro et Three.js" />
-		<meta name="viewport" content="width=device-width" initial-scale=0.75 />
+		<meta name="viewport" content="width=device-width" initial-scale=1 />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
@@ -248,5 +248,32 @@ const { title } = Astro.props;
 
 	::view-transition-old(root) {
 		animation: 0.2s ease-out 0s 1 normal both running fade-out;
+	}
+
+	/* --- Ajustements pour les écrans mobiles --- */
+	@media (max-width: 768px) {
+		body {
+			padding: 1.5rem 1rem 100px 1rem; /* Réduction du padding latéral */
+		}
+
+		h1 {
+			font-size: 2rem; /* Réduction de la taille des titres principaux */
+		}
+
+		.parchment-card {
+			padding: 1.5rem; /* Moins de padding dans les cartes */
+		}
+
+		.gold-button {
+			padding: 1rem; /* Boutons moins hauts */
+		}
+
+		.gold-button .title {
+			font-size: 1.2rem; /* Titres des boutons plus petits */
+		}
+
+		.card-grid {
+			gap: 1rem; /* Moins d'espace entre les cartes */
+		}
 	}
 </style>
