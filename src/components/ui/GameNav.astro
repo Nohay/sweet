@@ -1,0 +1,87 @@
+---
+const { pathname } = Astro.url;
+
+// Dans une application réelle, ces liens pourraient provenir d'un fichier de configuration.
+const navItems = [
+	{ href: '/', label: 'Accueil' },
+	{ href: '/atelier', label: 'Atelier' },
+	{ href: '/observatoire', label: 'Observatoire' },
+	{ href: '/boussole', label: 'Boussole' },
+	{ href: '/journal', label: 'Journal' },
+	{ href: '/auteur', label: 'Auteur' },
+	{ href: '/logs', label: 'Logs' },
+];
+---
+
+<nav class="game-nav">
+	<div id="nav-container" class="nav-container">
+		{
+			navItems.map((item) => {
+				// Met en surbrillance si le chemin commence par l'URL du lien (ex: /journal/2 commence par /journal)
+				const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href) && item.href.length > 1;
+				return (
+					<a href={item.href} class:list={['nav-item', { active: isActive }]} title={item.label}>
+						{item.label}
+					</a>
+				);
+			})
+		}
+	</div>
+</nav>
+
+<style>
+	/* --- Styles de la barre de navigation --- */
+	.game-nav {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: auto; /* La hauteur s'adapte au contenu */
+		background: rgba(253, 246, 232, 0.85); /* Fond parchemin semi-transparent */
+		border-top: 2px solid #c89b3c; /* Bordure dorée */
+		box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.15);
+		backdrop-filter: blur(8px);
+		z-index: 1000;
+		padding: 0.5rem 1rem; /* Un peu d'espace intérieur */
+	}
+
+	/* --- Styles du conteneur des liens --- */
+	.nav-container {
+		display: flex;
+		flex-wrap: wrap; /* Permet aux éléments de passer à la ligne */
+		justify-content: center;
+		align-items: center;
+        height: inherit;
+		gap: 0.5rem 1.5rem; /* Espace vertical et horizontal entre les liens */
+	}
+
+	.nav-item {
+		text-decoration: none;
+		color: #4a4130; /* Couleur texte sombre pour le contraste */
+		font-family: 'Cinzel', serif;
+		font-size: 0.9rem;
+		transition: all 0.2s ease-in-out;
+		padding: 0.25rem 0.5rem;
+	}
+
+	.nav-item.active {
+		color: #b8860b; /* Couleur dorée pour l'élément actif */
+		transform: scale(1.05);
+	}
+
+	.nav-item:hover {
+		color: #b8860b; /* Couleur dorée au survol */
+		transform: scale(1.1);
+	}
+
+	/* --- Styles pour les écrans larges (Desktop) --- */
+	@media (min-width: 768px) {
+		.game-nav {
+			height: 55px; /* Hauteur fixe pour le bureau */
+			padding: 0 1rem;
+		}
+		.nav-container {
+			flex-wrap: nowrap; /* Empêche le retour à la ligne sur les grands écrans */
+		}
+	}
+</style>

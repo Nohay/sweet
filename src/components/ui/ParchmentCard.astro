@@ -1,0 +1,20 @@
+---
+// Ce composant est un simple conteneur stylisé.
+// Il n'a pas besoin de props, il affiche simplement le contenu passé à l'intérieur.
+---
+
+<div class="parchment-card">
+	<slot />
+</div>
+
+<style>
+	.parchment-card {
+		background-color: rgba(253, 246, 232, 0.8); /* Fond parchemin légèrement transparent */
+		border: 1px solid #dcd0b9;
+		border-radius: 8px;
+		padding: 2rem;
+		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+		backdrop-filter: blur(4px); /* Effet de verre dépoli pour voir la texture du fond */
+		margin-bottom: 2rem;
+	}
+</style>

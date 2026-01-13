@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import GameLayout from '../../../layouts/GameLayout.astro';
+import GoldButton from '../../../components/ui/GoldButton.astro';
+
+export async function getStaticPaths() {
+	const allPosts = await getCollection('journal');
+	const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
+
+	return allTags.map((tag) => {
+		const filteredPosts = allPosts.filter((post) => post.data.tags?.includes(tag));
+		return {
+			params: { tag },
+			props: { posts: filteredPosts },
+		};
+	});
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<GameLayout title={`Récits: ${tag}`}>
+	<h1>Récits avec la balise : <span class="tag-title">{tag}</span></h1>
+
+	<div class="card-grid">
+		{
+			posts.map((post) => (
+				<GoldButton href={`/journal/${post.slug}/`} title={post.data.title} body={`Publié le ${post.data.publishDate.toLocaleDateString('fr-FR')}`} />
+			))
+		}
+	</div>
+</GameLayout>
+
+<style>
+	.tag-title {
+		color: #c89b3c;
+	}
+</style>

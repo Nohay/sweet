@@ -1,0 +1,17 @@
+---
+interface Props {
+	href: string;
+	title: string;
+	body: string;
+}
+
+const { href, title, body } = Astro.props;
+---
+<style>
+	/* Les styles ont été déplacés dans GameLayout.astro pour être globaux */
+</style>
+
+<a href={href} class="gold-button">
+	<div class="title">{title}</div>
+	<p class="body">{body}</p>
+</a>

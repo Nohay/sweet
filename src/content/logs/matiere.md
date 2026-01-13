@@ -1,7 +1,7 @@
 ---
 title: "Ajout de la matière du passé"
 publishDate: 2026-01-12
-description: "Création du contenu narratif principal du site à travers la voix de G'Mas."
+tags: ["Contenu", "Design", "Narratif", "Composants"]
 ---
 
 Le site a été enrichi avec le contenu principal, donnant vie à l'univers narratif du projet. L'ensemble du site adopte désormais la voix et la perspective de G'Mas, le pèlerin Grung.

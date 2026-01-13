@@ -1,18 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import GameLayout from '../../layouts/GameLayout.astro';
+import ContentSearch from '../../components/ContentSearch.astro';
 
-const allJournalEntries = await getCollection('journal');
+// 1. Récupère TOUS les articles et les trie.
+const allPosts = await getCollection('journal');
+const sortedPosts = allPosts.sort(
+	(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+// 2. Extrait toutes les balises uniques
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
+
 ---
 
-<Layout title="Journal d'Aventure">
-   <h1>Journal d'Aventure</h1>
-   <ul>
-       {allJournalEntries.map(entry => (
-           <li>
-               <a href={`/journal/${entry.slug}`}>{entry.data.title}</a>
-               <p>Publié le: {entry.data.publishDate.toLocaleDateString('fr-FR')}</p>
-           </li>
-       ))}
-   </ul>
-</Layout>
+<GameLayout title="Journal d'Aventure">
+	<h1>📖 Journal d'Aventure</h1>
+	<p style="text-align: center; margin-bottom: 3rem;">
+		Les chroniques de nos voyages. Utilisez la barre de recherche pour trouver un récit.
+	</p>
+	
+	<!-- 2. On passe tous les articles au composant client -->
+	<ContentSearch posts={sortedPosts} tags={allTags} basePath="journal" />
+
+</GameLayout>

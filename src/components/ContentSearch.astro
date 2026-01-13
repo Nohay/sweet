@@ -1,0 +1,163 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import GoldButton from './ui/GoldButton.astro';
+
+interface Props {
+	posts: CollectionEntry<'journal' | 'logs'>[];
+	tags: string[];
+	basePath: 'journal' | 'logs';
+}
+
+const { posts, tags, basePath } = Astro.props;
+---
+
+<div id="journal-search-component">
+	<div class="search-wrapper">
+		<input type="search" id="search-input" placeholder="Rechercher..." />
+	</div>
+
+	<div id="tag-filters" class="tags-container">
+		<button class="tag-btn active" data-tag="all">Toutes</button>
+		{
+			tags.map((tag) => (
+				<button class="tag-btn" data-tag={tag}>{tag}</button>
+			))
+		}
+	</div>
+
+	<div id="search-results" class="card-grid">
+		{
+			posts.map((post) => (
+				<GoldButton
+					href={`/${basePath}/${post.slug}/`}
+					title={post.data.title}
+					body={`Publié le ${post.data.publishDate.toLocaleDateString('fr-FR')}`}
+				/>
+			))
+		}
+	</div>
+	<p id="no-results" class="no-results-message" style="display: none;">
+		Aucun document ne correspond à votre recherche.
+	</p>
+</div>
+
+<script define:vars={{ posts, tags, basePath }}>
+	const searchInput = document.getElementById('search-input');
+	const resultsContainer = document.getElementById('search-results');
+	const noResultsMessage = document.getElementById('no-results');
+	const tagFiltersContainer = document.getElementById('tag-filters');
+
+	let currentQuery = '';
+	let activeTag = 'all';
+
+	// --- Fonctions Utilitaires ---
+	// Fonction pour normaliser le texte (enlever les accents, mettre en minuscule)
+	function normalizeText(text) {
+		return text
+			.toLowerCase()
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '');
+	}
+
+	// Fonction pour mettre à jour l'affichage
+	function renderResults() {
+		let filteredPosts = posts;
+
+		// 1. Filtrer par balise active
+		if (activeTag !== 'all') {
+			filteredPosts = filteredPosts.filter(post => post.data.tags?.includes(activeTag));
+		}
+
+		// 2. Filtrer par recherche textuelle
+		if (currentQuery) {
+			filteredPosts = filteredPosts.filter(post => normalizeText(post.data.title).includes(currentQuery));
+		}
+
+		// 3. Mettre à jour le DOM
+		noResultsMessage.style.display = filteredPosts.length === 0 ? 'block' : 'none';
+
+		resultsContainer.innerHTML = filteredPosts
+				.map(
+					(post) =>
+						`<a href="/${basePath}/${post.slug}/" class="gold-button">
+               <div class="title">${post.data.title}</div>
+               <p class="body">Publié le ${new Date(post.data.publishDate).toLocaleDateString('fr-FR')}</p>
+             </a>`
+				)
+				.join('');
+	}
+
+	// --- Écouteurs d'événements ---
+	searchInput.addEventListener('input', (e) => {
+		currentQuery = normalizeText(e.target.value);
+		renderResults();
+	});
+
+	tagFiltersContainer.addEventListener('click', (e) => {
+		if (!e.target.matches('.tag-btn')) return;
+
+		// Mettre à jour le style du bouton actif
+		tagFiltersContainer.querySelector('.active').classList.remove('active');
+		e.target.classList.add('active');
+
+		activeTag = e.target.dataset.tag;
+		renderResults();
+	});
+</script>
+
+<style>
+	/* Styles pour les filtres de balises */
+	.tags-container {
+		display: flex;
+		justify-content: center;
+		gap: 0.75rem;
+		flex-wrap: wrap;
+		margin-bottom: 3rem;
+	}
+	.search-wrapper {
+		margin-bottom: 3rem;
+		text-align: center;
+	}
+	#search-input {
+		width: 100%;
+		max-width: 400px;
+		padding: 0.75rem 1rem;
+		font-size: 1.1rem;
+		font-family: 'EB Garamond', serif;
+		border: 2px solid #dcd0b9;
+		border-radius: 8px;
+		background-color: rgba(253, 246, 232, 0.8);
+		color: #4a4130;
+	}
+	#search-input:focus {
+		outline: none;
+		border-color: #c89b3c;
+		box-shadow: 0 0 10px rgba(200, 155, 60, 0.4);
+	}
+	.no-results-message {
+		text-align: center;
+		font-style: italic;
+		font-size: 1.2rem;
+		color: #4a4130;
+	}
+	.tag-btn {
+		background-color: transparent;
+		color: #b8860b;
+		padding: 0.4rem 1rem;
+		border-radius: 15px;
+		font-size: 0.9rem;
+		font-family: 'Cinzel', serif;
+		border: 1px solid rgba(200, 155, 60, 0.5);
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+	.tag-btn:hover {
+		background-color: rgba(200, 155, 60, 0.2);
+		border-color: #c89b3c;
+	}
+	.tag-btn.active {
+		background-color: #c89b3c;
+		color: #2c2a24;
+		border-color: #c89b3c;
+	}
+</style>

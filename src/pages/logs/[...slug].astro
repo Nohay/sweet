@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import GameLayout from '../../layouts/GameLayout.astro';
+import ParchmentCard from '../../components/ui/ParchmentCard.astro';
+
+// 1. Génère une page pour chaque entrée de la collection 'logs'
+export async function getStaticPaths() {
+	const logEntries = await getCollection('logs');
+	return logEntries.map((entry) => ({
+		params: { slug: entry.slug },
+		props: entry,
+	}));
+}
+
+// 2. Récupère les props pour la page actuelle
+const post = Astro.props;
+const { Content } = await post.render();
+---
+
+<GameLayout title={post.data.title}>
+	<ParchmentCard>
+		<h1>{post.data.title}</h1>
+		<div class="meta">
+			Publié le {post.data.publishDate.toLocaleDateString('fr-FR')}
+		</div>
+		{post.data.tags && (
+			<div class="tags-container">
+				{post.data.tags.map((tag) => (
+					<a href={`/logs/tags/${tag}`} class="tag">{tag}</a>
+				))}
+			</div>
+		)}
+		<article class="prose">
+			<Content />
+		</article>
+	</ParchmentCard>
+</GameLayout>
+
+<style>
+	/* Les styles des tags sont maintenant globaux dans GameLayout.astro */
+
+	.meta {
+		text-align: center;
+		font-style: italic;
+		margin-bottom: 2rem;
+	}
+</style>

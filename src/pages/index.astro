@@ -1,17 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import GameLayout from '../layouts/GameLayout.astro';
+import GoldButton from '../components/ui/GoldButton.astro';
 ---
-<style>
-	.card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 2rem;
-		padding: 0;
-	}
-</style>
 
-<Layout title="Bienvenue sur JDRSweetJourney">
+<GameLayout title="Bienvenue sur JDRSweetJourney">
 	<h1>Bienvenue sur le projet JDR Sweet Journey !</h1>
 	<h2>L'Ambition</h2>
 	<p>L'objectif est de créer un clone entièrement web de l'application mobile <strong>AFK Journey</strong>. Ce projet sera une vitrine technologique utilisant :</p>
@@ -20,10 +12,10 @@ import Card from '../components/Card.astro';
 		<li>La retranscription de ces éléments dans le navigateur grâce à <strong>Three.js</strong>.</li>
 	</ul>
 	<ul class="card-grid">
-		<Card
+		<GoldButton
 			href="https://threejs-journey.com"
 			title="🎓 Formation : Three.js Journey"
-			body="Pour garantir une base technique solide, ce projet s'appuie sur les enseignements de Three.js Journey, une formation de référence pour maîtriser Three.js."
+			body="Ce projet s'appuie sur les enseignements de Three.js Journey pour garantir une base technique solide."
 		/>
 	</ul>
 	<p>Si en plus, cette plateforme peut servir de point de repère pour nos aventures de jeu de rôle, c'est une pierre deux coups !</p>
@@ -32,17 +24,17 @@ import Card from '../components/Card.astro';
 	<p>Ce site est aussi un levier pour maîtriser les paradigmes technologiques de demain. Explorez le <strong>journal d'aventure</strong> pour suivre la quête, ou consultez les <strong>logs de construction</strong> pour voir les coulisses techniques.</p>
 
 	<ul class="card-grid">
-		<Card
+		<GoldButton
 			href="/atelier"
 			title="🏜️ Le Sanctuaire des Grains"
 			body="Découvrez les arts et les outils du pèlerin pour façonner le sable et les rêves."
 		/>
-		<Card
+		<GoldButton
 			href="/observatoire"
 			title="🎨 L'Observatoire"
 			body="Explorez les sources d'inspiration : artistes, développeurs, podcasts et jeux qui nourrissent ce projet."
 		/>
-		<Card
+		<GoldButton
 			href="/boussole"
 			title="⚖️ La Boussole Éthique"
 			body="Une réflexion sur les modèles économiques vertueux et ceux à éviter dans le monde du jeu vidéo."
@@ -50,4 +42,4 @@ import Card from '../components/Card.astro';
 	</ul>
 
 	<p>Quelle ambition, jeune batracien...</p>
-</Layout>
+</GameLayout>

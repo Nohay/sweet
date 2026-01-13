@@ -1,0 +1,252 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import GameNav from '../components/ui/GameNav.astro';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Clone de AFK Journey avec Astro et Three.js" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<ViewTransitions />
+	</head>
+	<body>
+		<main>
+			<slot />
+		</main>
+		<GameNav />
+	</body>
+</html>
+
+<style is:global>
+	@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=EB+Garamond&display=swap');
+
+	html {
+		background-color: #fdf6e8; /* Ton crème/parchemin */
+	}
+
+	body {
+		/* La couleur de fond est maintenant sur l'élément HTML */
+		background-color: transparent;
+		color: #4a4a4a;
+		font-family: 'EB Garamond', serif;
+		margin: 0;
+		/* Ajout d'un padding en bas pour ne pas que la nav masque le contenu */
+		padding: 2rem 2rem 100px 2rem;
+		position: relative;
+	}
+
+	/* Applique une texture de grain de papier en arrière-plan */
+	body::before {
+		content: '';
+		position: fixed;
+		top: 0; left: 0;
+		width: 100%; height: 100%;
+		/* Assurez-vous d'avoir une image de texture dans public/textures/ */
+		background-image: url('/textures/paper-grain.png');
+		opacity: 0.5; /* J'augmente l'opacité pour qu'elle soit bien visible */
+
+		pointer-events: none;
+		z-index: -1;
+	}
+
+	/* --- Styles des Titres --- */
+	h1, h2 {
+		font-family: 'Cinzel', serif;
+		text-align: center;
+		color: #3a352a; /* Une couleur de texte sombre pour un bon contraste */
+		margin-bottom: 2rem; /* Espace après l'ornement */
+	}
+
+	/* Ajoute un ornement doré sous les titres */
+	h1::after, h2::after {
+		content: '';
+		display: block;
+		width: 100px; /* Largeur de l'ornement */
+		height: 2px;
+		background: linear-gradient(90deg, transparent, #c89b3c, transparent); /* Dégradé doré */
+		margin: 0.75rem auto 0; /* Espace entre le texte et l'ornement */
+		opacity: 0.8;
+		/* Animation pour "dessiner" la ligne */
+		transform: scaleX(0);
+		animation: drawLine 1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+	}
+
+	/* On peut différencier légèrement le h2 */
+	h2 {
+		font-size: 1.8rem;
+		color: #4a4130;
+	}
+
+	/* --- Styles pour le contenu Markdown (.prose) --- */
+	.prose h3 {
+		font-family: 'Cinzel', serif;
+		text-align: left;
+		font-size: 1.5rem;
+		border-bottom: 1px solid #dcd0b9;
+		padding-bottom: 0.5rem;
+		margin-top: 2.5rem;
+	}
+	/* On retire l'ornement pour les h3 */
+	.prose h3::after {
+		content: none;
+	}
+
+	.prose p {
+		line-height: 1.7;
+		font-size: 1.1rem;
+	}
+
+	.parchment-card a {
+		color: #c89b3c; /* Or vif */
+		text-decoration: none;
+		font-weight: bold;
+		transition: color 0.2s;
+	}
+	.parchment-card a:hover {
+		filter: brightness(1.2);
+	}
+
+	.prose ul {
+		list-style: none;
+		padding-left: 1rem;
+	}
+	.prose ul li::before {
+		content: '•';
+		color: #c89b3c;
+		font-weight: bold;
+		display: inline-block;
+		width: 1em;
+		margin-left: -1em;
+	}
+
+	.prose hr {
+		border: 0;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, #c89b3c, transparent);
+		margin: 3rem 0;
+	}
+
+	.prose table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 2rem 0;
+	}
+	.prose th, .prose td {
+		padding: 0.75rem;
+		text-align: left;
+		border-bottom: 1px solid #dcd0b9; /* Ligne de séparation parchemin */
+	}
+	.prose th {
+		font-family: 'Cinzel', serif;
+		background-color: rgba(253, 246, 232, 0.5); /* Fond de cellule plus clair */
+	}
+
+	/* --- Styles pour GoldButton --- */
+	.gold-button {
+		background: linear-gradient(145deg, #fefbf3, #f8f1e4); /* Dégradé parchemin clair */
+		border: 2px solid #c89b3c;
+		border-radius: 15px;
+		color: #4a4130; /* Texte sombre pour le contraste */
+		padding: 1.5rem;
+		text-align: center;
+		text-decoration: none;
+		transition: all 0.3s ease;
+		display: block;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), inset 0 0 5px rgba(200, 155, 60, 0.1);
+	}
+	.gold-button:hover {
+		transform: translateY(-5px);
+		filter: brightness(1.05);
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 0 10px rgba(200, 155, 60, 0.2);
+		border-color: #f0e6d2;
+	}
+	.gold-button .title { /* Ciblage plus spécifique */
+		font-family: 'Cinzel', serif;
+		font-size: 1.5rem;
+		color: #b8860b; /* Titre en couleur or */
+		margin-bottom: 0.5rem;
+	}
+	.gold-button .body { /* Ciblage plus spécifique */
+		font-family: 'EB Garamond', serif;
+		font-size: 1rem;
+		color: #4a4130; /* Texte sombre pour le contraste */
+	}
+	.card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 2rem;
+		padding: 0;
+	}
+
+	/* --- Styles pour les Tags --- */
+	.tags-container {
+		display: flex;
+		justify-content: center;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+		margin-bottom: 2rem;
+	}
+	.tag {
+		background-color: rgba(200, 155, 60, 0.2);
+		color: #b8860b;
+		padding: 0.25rem 0.75rem;
+		border-radius: 15px;
+		font-size: 0.8rem;
+		font-family: 'Cinzel', serif;
+		border: 1px solid rgba(200, 155, 60, 0.3);
+		text-decoration: none;
+		transition: all 0.2s ease;
+	}
+	.tag:hover {
+		background-color: #c89b3c;
+		color: #2c2a24;
+	}
+
+	/* Keyframes pour l'animation de l'ornement */
+	@keyframes drawLine {
+		from {
+			transform: scaleX(0);
+		}
+		to {
+			transform: scaleX(1);
+		}
+	}
+
+	/* Animation pour la nouvelle page (le "pop-up") */
+	@keyframes slide-in {
+		from {
+			transform: translateY(15%) scale(0.95);
+			opacity: 0;
+		}
+		to {
+			transform: translateY(0) scale(1);
+			opacity: 1;
+		}
+	}
+
+	/* Animation pour l'ancienne page qui disparaît */
+	@keyframes fade-out {
+		from { opacity: 1; }
+		to { opacity: 0; }
+	}
+
+	/* On applique nos animations aux pseudo-éléments de View Transitions */
+	::view-transition-new(root) {
+		animation: 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0s 1 normal both running slide-in;
+	}
+
+	::view-transition-old(root) {
+		animation: 0.2s ease-out 0s 1 normal both running fade-out;
+	}
+</style>

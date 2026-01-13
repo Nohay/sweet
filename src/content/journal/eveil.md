@@ -2,11 +2,12 @@
 title: "L'Éveil du Cul Brillant"
 author: "G'Mas"
 publishDate: 2026-01-10
+tags: ["Yeuze-sur-Chenarde", "Exploration", "Gurdil", "Bulle", "Social", "Mystère"]
 ---
 
 ### Chroniques de Yeuze-sur-Chenarde
 
-L'arrivée à **Yeuze-sur-Chenarde** restera gravée dans ma mémoire, non pas par le sang, mais par la glace. Nous sommes arrivés en début d'après-midi, et le froid m'a immédiatement saisi les os, moi qui suis si sensible à ce "souffle de vie" qui anime le monde. Accompagné de la fée Bulle, je ne pensais qu'à une chose : le **Grand Chêne**. Cet arbre colossal, mon but, mon phare dans cette immensité blanche qui se dresse dorénavant devant nous
+L'arrivée à **Yeuze-sur-Chenarde** restera gravée dans ma mémoire, non pas par le sang, mais par la glace. Nous sommes arrivés en début d'après-midi, et le froid m'a immédiatement saisi les os, moi qui suis si sensible à ce "souffle de vie" qui anime le monde. Accompagné de la fée Bulle, je ne pensais qu'à une chose : le **Grand Chêne**. Cet arbre colossal, mon but, mon phare dans cette immensité blanche qui se dresse dorénavant devant nous.
 
 Soudain, le chaos. Un projectile percute l'arrière de mon crâne. Gurdil le nain, plus chanceux ou plus bas, l'évite de justesse. Nyrae, notre Tabaxi, n'a pas cette chance, bien qu'elle ait aperçu nos assaillants avant l'impact. Ce n'était pas une embuscade de brigands, mais une armée de gamins du village armés de boules de neige ! Frigorifié, incapable de réagir, je me suis laissé "exploser" par leurs tirs. Une défaite tactique cuisante qui nous a forcés à nous réfugier, tels des vaincus, dans la chaleur de l'auberge.
 
@@ -76,4 +77,3 @@ Kwel semble être une source d'informations aussi riche qu'incertaine. Voici les
 **Paradoxe Temporel :** Il affirme avoir fait partie d'aventuriers il y a un millénaire, tout en disant qu'il a lui-même moins de 1000 ans (alors que le village, lui, dépasse cet âge).
 
 **Connaissance des Grungs :** Il a mentionné avoir déjà croisé des membres de votre espèce (Grung) au cours de sa vie.
-

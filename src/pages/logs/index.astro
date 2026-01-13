@@ -1,18 +1,25 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import GameLayout from '../../layouts/GameLayout.astro';
+import ContentSearch from '../../components/ContentSearch.astro';
 
-const allLogEntries = await getCollection('logs');
+// 1. Récupère TOUS les logs et les trie.
+const allPosts = await getCollection('logs');
+const sortedPosts = allPosts.sort(
+	(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+// 2. Extrait toutes les balises uniques
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
 ---
 
-<Layout title="Logs de Construction">
-    <h1>Logs de Construction</h1>
-    <ul>
-        {allLogEntries.map(entry => (
-            <li>
-                <a href={`/logs/${entry.slug}`}>{entry.data.title}</a>
-                <p>Publié le: {entry.data.publishDate.toLocaleDateString('fr-FR')}</p>
-            </li>
-        ))}
-    </ul>
-</Layout>
+<GameLayout title="Logs de Construction">
+	<h1>⚙️ Logs de Construction</h1>
+	<p style="text-align: center; margin-bottom: 3rem;">
+		Les coulisses techniques du projet. Utilisez la barre de recherche pour trouver un log.
+	</p>
+	
+	<!-- 3. On utilise le composant de recherche pour les logs -->
+	<ContentSearch posts={sortedPosts} tags={allTags} basePath="logs" />
+
+</GameLayout>
