@@ -1,0 +1,63 @@
+---
+// Exemple de données. Plus tard, cela pourrait venir de fichiers de contenu.
+const habits = [
+    "Sport (3x/sem)",
+    "Méditation",
+    "Lecture",
+    "Écriture (Log/Journal)",
+    "Pratique du code",
+    "Budget respecté",
+    "Coucher avant 23h"
+];
+
+const daysInMonth = 31; // Pour Janvier, à rendre dynamique plus tard
+
+// C'est ici que vous contrôlez l'état du tracker.
+// Pour chaque habitude, listez les jours où elle a été complétée.
+const completedHabits = {
+    "Sport (3x/sem)": [],
+    "Méditation": [],
+    "Lecture": [],
+    "Écriture (Log/Journal)": [17, 18],
+    "Pratique du code": [17,18],
+    "Budget respecté": [],
+    "Coucher avant 23h": [],
+};
+---
+
+<h1 class="text-3xl font-bold mb-2">Collection : Trackers Mensuels</h1>
+<p class="text-slate-500 mb-8">Une vue d'ensemble pour cultiver la discipline et observer les schémas qui se dessinent.</p>
+
+<section>
+    <h2 class="text-2xl font-semibold mb-4 text-slate-800">Janvier 2026</h2>
+    <div class="overflow-x-auto rounded-lg border border-slate-200">
+        <table class="min-w-full text-sm text-left">
+            <thead class="bg-slate-50 text-slate-600">
+                <tr>
+                    <th class="p-2 font-semibold">Habitude</th>
+                    {Array.from({ length: daysInMonth }, (_, i) => (
+                        <th class="w-10 h-10 p-1 text-center font-mono font-normal">{i + 1}</th>
+                    ))}
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                {habits.map(habit => (
+                    <tr class="border-t border-slate-200 align-middle">
+                        <td class="p-2 font-semibold">{habit}</td>
+                        {Array.from({ length: daysInMonth }, (_, i) => {
+                            const day = i + 1;
+                            const isCompleted = completedHabits[habit]?.includes(day);
+                            const cellClass = isCompleted ? 'bg-green-400' : 'bg-white';
+                            return (
+                                <td class="p-1 text-center">
+                                    <div class={`w-6 h-6 border border-slate-300 rounded-sm mx-auto ${cellClass}`}></div>
+                                </td>
+                            );
+                        })}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+    <p class="text-xs text-slate-400 mt-2">Astuce : Sur mobile, la grille peut être scrollée horizontalement.</p>
+</section>

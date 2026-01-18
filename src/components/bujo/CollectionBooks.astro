@@ -1,0 +1,39 @@
+---
+// Exemple de données. Plus tard, cela pourrait venir de fichiers de contenu.
+const books = [
+    { title: "Vers la beauté", author: "David Foenkinos", status: "En cours" },
+];
+
+const booksByStatus = {
+    'En cours': books.filter(b => b.status === 'En cours'),
+    'À lire': books.filter(b => b.status === 'À lire'),
+    'À acheter': books.filter(b => b.status === 'À acheter'),
+    'Lu': books.filter(b => b.status === 'Lu'),
+};
+
+const statusStyles = {
+    'En cours': 'bg-blue-100 text-blue-800',
+    'À lire': 'bg-yellow-100 text-yellow-800',
+    'Lu': 'bg-green-100 text-green-800',
+};
+---
+
+<h1 class="text-3xl font-bold mb-2">Collection : Livres à lire</h1>
+<p class="text-slate-500 mb-8">La pile de savoir et d'évasion qui attend d'être explorée.</p>
+
+{Object.entries(booksByStatus).map(([status, bookList]) => (
+    <section class="mb-8">
+        <h2 class="text-xl font-bold text-slate-700 border-b pb-2 mb-4">{status}</h2>
+        <ul class="space-y-3">
+            {bookList.map(book => (
+                <li class="p-4 bg-white rounded-md shadow-sm border border-slate-200 flex justify-between items-center">
+                    <div>
+                        <p class="font-semibold">{book.title}</p>
+                        <p class="text-sm text-slate-500">{book.author}</p>
+                    </div>
+                    <span class={`text-xs font-semibold px-2 py-1 rounded-full ${statusStyles[status]}`}>{book.status}</span>
+                </li>
+            ))}
+        </ul>
+    </section>
+))}

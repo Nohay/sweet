@@ -1,0 +1,62 @@
+---
+const { logs, year, month } = Astro.props;
+
+const yearNum = parseInt(year);
+const monthNum = parseInt(month);
+
+const monthName = new Date(yearNum, monthNum - 1).toLocaleString('fr-FR', { month: 'long' });
+const capitalizedMonthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+// --- Logique du Calendrier ---
+const daysInMonth = new Date(yearNum, monthNum, 0).getDate();
+const firstDayOfMonth = new Date(yearNum, monthNum - 1, 1).getDay(); // 0=Dim, 1=Lun, ...
+const startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+
+const logsByDay = new Map(logs.map(log => {
+    const day = log.data.publishDate.getDate();
+    return [day, log];
+}));
+---
+
+<h1 class="text-3xl font-bold mb-2">Monthly Log</h1>
+<p class="text-slate-500 mb-8">{capitalizedMonthName} {year}</p>
+
+<!-- Vue Calendrier -->
+<div class="grid grid-cols-7 gap-1 text-center mb-12">
+    <!-- Jours de la semaine -->
+    {weekDays.map(day => <div class="font-bold text-sm text-slate-500 py-2">{day}</div>)}
+
+    <!-- Jours vides avant le début du mois -->
+    {Array.from({ length: startOffset }).map(() => <div />)}
+
+    <!-- Jours du mois -->
+    {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
+        const log = logsByDay.get(day);
+        const currentDate = new Date(yearNum, monthNum - 1, day);
+        const isToday = new Date().toDateString() === currentDate.toDateString();
+        const dayOfWeek = currentDate.getDay();
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+        return (
+            <a href={log ? `/bujo/${log.slug}` : '#'} class:list={[
+                "h-12 w-12 flex items-center justify-center rounded-full transition-colors",
+                { "bg-slate-50 text-slate-500": isWeekend && !log },
+                { "bg-blue-500 text-white font-bold": isToday && log },
+                { "border-2 border-blue-500": isToday && !log },
+                { "bg-blue-100 hover:bg-blue-200 font-semibold": log && !isToday },
+                { "pointer-events-none": !log }
+            ]}>{day}</a>
+        );
+    })}
+</div>
+
+<!-- Liste des entrées -->
+<h2 class="text-2xl font-semibold mb-4 border-t pt-8">Toutes les entrées du mois</h2>
+<ul class="space-y-4">
+    {logs.map(log => (
+        <li class="border-b border-slate-200 pb-3">
+            <a href={`/bujo/${log.slug}`} class="text-lg font-semibold text-blue-600 hover:underline">{log.data.title}</a>
+        </li>
+    ))}
+</ul>

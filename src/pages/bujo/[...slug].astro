@@ -1,0 +1,133 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import LifeLayout from '../../layouts/LifeLayout.astro';
+
+// Import des composants de page pour les garder modulaires
+import BujoIndex from '../../components/bujo/BujoIndex.astro';
+import BujoKeys from '../../components/bujo/BujoKeys.astro';
+import MonthlyLog from '../../components/bujo/MonthlyLog.astro';
+import BujoFutureLog from '../../components/bujo/BujoFutureLog.astro';
+import CollectionTracker from '../../components/bujo/CollectionTracker.astro';
+import CollectionObjectifs from '../../components/bujo/CollectionObjectifs.astro';
+import CollectionBooks from '../../components/bujo/CollectionBooks.astro';
+import CollectionPlaceholder from '../../components/bujo/CollectionPlaceholder.astro';
+import CollectionFilms from '../../components/bujo/CollectionFilms.astro';
+
+export async function getStaticPaths() {
+    const bujoEntries = await getCollection('bujo');
+    const paths = bujoEntries.map(entry => ({
+        params: { slug: entry.slug }
+    }));
+
+    // Ajouter les routes statiques/virtuelles
+    paths.push({ params: { slug: undefined } }); // Index
+    paths.push({ params: { slug: 'keys' } });
+    paths.push({ params: { slug: 'future-log' } });
+    paths.push({ params: { slug: 'collections/livres-a-lire' } });
+    paths.push({ params: { slug: 'collections/trackers-mensuels' } });
+    paths.push({ params: { slug: 'collections/objectifs-du-mois' } });
+    paths.push({ params: { slug: 'collections/suivi-depenses' } });
+    paths.push({ params: { slug: 'collections/gratitude' } });
+    paths.push({ params: { slug: 'collections/brain-dump' } });
+    paths.push({ params: { slug: 'collections/bucket-list' } });
+    paths.push({ params: { slug: 'collections/films-a-voir' } });
+    paths.push({ params: { slug: 'collections/idees-projets' } });
+    paths.push({ params: { slug: 'collections/idees-de-projets' } });
+
+    // Ajouter les routes pour les mois
+    const uniqueMonths = new Set<string>();
+    bujoEntries.forEach(log => {
+        const [year, month] = log.slug.split('/');
+        if (year && month && !isNaN(parseInt(year)) && !isNaN(parseInt(month))) {
+            uniqueMonths.add(`${year}/${month}`);
+        }
+    });
+    uniqueMonths.forEach(monthPath => {
+        paths.push({ params: { slug: monthPath } });
+    });
+
+    return paths;
+}
+
+const { slug } = Astro.params;
+
+// 1. Gérer la page d'index (/bujo)
+if (slug === undefined) {
+    const allLogs = await getCollection('bujo');
+    const uniqueMonths = new Set<string>();
+    allLogs.forEach(log => {
+        const [year, month] = log.slug.split('/');
+        if (year && month && !isNaN(parseInt(year)) && !isNaN(parseInt(month))) {
+            uniqueMonths.add(`${year}/${month}`);
+        }
+    });
+    Astro.props.page = 'index';
+    Astro.props.months = Array.from(uniqueMonths);
+}
+// 2. Gérer les pages statiques (clés, etc.)
+else if (slug === 'keys') {
+    Astro.props.page = 'keys';
+}
+else if (slug === 'future-log') {
+    Astro.props.page = 'bujo-future-log';
+}
+// 3. Gérer les collections
+else if (slug.startsWith('collections/')) {
+    if (slug === 'collections/trackers-mensuels') {
+        Astro.props.page = 'collection-tracker';
+    } else if (slug === 'collections/livres-a-lire') {
+        Astro.props.page = 'collection-books';
+    } else if (slug === 'collections/objectifs-du-mois') {
+        Astro.props.page = 'collection-objectifs';
+    } else if (slug === 'collections/films-a-voir') {
+        Astro.props.page = 'collection-films';
+    }
+    else {
+        Astro.props.page = 'collection-placeholder';
+        Astro.props.collectionTitle = slug.split('/')[1].replace(/-/g, ' ');
+    }
+}
+// 4. Gérer les logs mensuels (ex: /bujo/2026/01)
+else if (slug.match(/^\d{4}\/\d{2}$/)) {
+    const [year, month] = slug.split('/');
+    const monthlyLogs = await getCollection('bujo', ({ slug: logSlug }) => logSlug.startsWith(slug));
+    Astro.props.page = 'monthly-log';
+    Astro.props.logs = monthlyLogs;
+    Astro.props.year = year;
+    Astro.props.month = month;
+}
+// 5. Gérer les entrées de contenu (Daily Logs)
+else {
+    const entry = await getEntry('bujo', slug);
+    if (entry) {
+        const { Content } = await entry.render();
+        Astro.props.page = 'entry';
+        Astro.props.entry = entry;
+        Astro.props.Content = Content;
+    }
+}
+
+const { page, entry, Content, months, logs, year, month, collectionTitle } = Astro.props;
+const title = page === 'index' ? 'Journal de Bord' : (entry ? entry.data.title : collectionTitle || 'Journal');
+---
+
+<LifeLayout title={title}>
+    {page === 'index' && <BujoIndex months={months} />}
+    {page === 'keys' && <BujoKeys />}
+    {page === 'bujo-future-log' && <BujoFutureLog />}
+
+    {page === 'collection-tracker' && <CollectionTracker />}
+    {page === 'collection-objectifs' && <CollectionObjectifs />}
+    {page === 'collection-books' && <CollectionBooks />}
+    {page === 'collection-films' && <CollectionFilms />}
+    {page === 'collection-placeholder' && <CollectionPlaceholder collectionTitle={collectionTitle} />}
+
+    {page === 'monthly-log' && <MonthlyLog logs={logs} year={year} month={month} />}
+
+    {page === 'entry' && Content && (
+        <article class="prose prose-slate lg:prose-xl max-w-none">
+            <h1 class="text-3xl font-bold mb-2">{entry.data.title}</h1>
+            <Content />
+        </article>
+    )}
+</LifeLayout>

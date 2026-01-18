@@ -36,8 +36,19 @@ const codexCollection = defineCollection({
   }),
 });
 
+const bujoCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    publishDate: z.date(),
+    tags: z.array(z.string()),
+    period: z.string().optional(),
+  }),
+});
+
 export const collections = {
   journal: journalCollection,
   logs: logsCollection,
   codex: codexCollection,
+  bujo: bujoCollection,
 };

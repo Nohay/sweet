@@ -1,0 +1,46 @@
+---
+// Example data. This could later come from content files.
+const objectives = [
+    {
+        title: "Finaliser le pivot structurel du site",
+        steps: [
+        ]
+    },
+    {
+        title: "Lancer la section 'Journal de Bord'",
+        steps: [
+            { text: "Créer l'architecture du Bujo", done: true },
+            { text: "Remplir les collections de base", done: true },
+        ]
+    },
+    {
+        title: "Améliorer ma pratique d'Obsidian",
+        steps: [
+        ]
+    },
+    {
+        title: "Améliorer ma pratique d'Astro",
+        steps: [
+        ]
+    }
+];
+---
+
+<h1 class="text-3xl font-bold mb-2">Collection : Objectifs du Mois</h1>
+<p class="text-slate-500 mb-8">Découper les grandes ambitions en étapes réalisables pour rester motivé.</p>
+
+<div class="space-y-6">
+    {objectives.map(obj => (
+        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+            <h3 class="font-semibold text-lg text-slate-800 mb-3">{obj.title}</h3>
+            <ul class="space-y-2">
+                {obj.steps.map(step => (
+                    <li class="flex items-center text-sm">
+                        <input type="checkbox" checked={step.done} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3" />
+                        <span class:list={[{ "line-through text-slate-400": step.done }]}>{step.text}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    ))}
+</div>

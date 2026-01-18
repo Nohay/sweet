@@ -1,0 +1,24 @@
+---
+const { symbol } = Astro.props;
+
+const keyMap = {
+    '•': { style: '' },
+    'X': { style: 'text-green-600' },
+    '>': { style: 'text-blue-600' },
+    '<': { style: 'text-orange-600' },
+    '○': { style: '' },
+    '–': { style: '' },
+    's': { style: 'text-slate-400', symbol: '<s>•</s>' }, // Cas spécial pour la tâche annulée
+    '*': { style: 'text-red-500' },
+    '!': { style: 'text-yellow-500' },
+    '$': { style: 'text-green-700' },
+    '👁️': { style: '' },
+    '△': { style: '' },
+    '♡': { style: 'text-pink-500' },
+    '⭘': { style: '' },
+    '⚓': { style: '' },
+};
+
+const currentKey = keyMap[symbol] || { style: '', symbol: symbol };
+---
+<span class:list={["w-8 inline-block text-center font-mono text-xl", currentKey.style]} set:html={currentKey.symbol || symbol} />

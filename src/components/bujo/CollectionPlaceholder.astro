@@ -1,0 +1,10 @@
+---
+const { collectionTitle } = Astro.props;
+const capitalizedTitle = collectionTitle ? collectionTitle.charAt(0).toUpperCase() + collectionTitle.slice(1) : "Collection";
+---
+<h1 class="text-3xl font-bold mb-2">Collection : {capitalizedTitle}</h1>
+<p class="text-slate-500 mb-8">Cette collection est en cours de construction.</p>
+
+<div class="p-8 text-center bg-slate-50 rounded-lg border-2 border-dashed border-slate-300">
+    <p class="text-slate-500 italic">Contenu à venir...</p>
+</div>

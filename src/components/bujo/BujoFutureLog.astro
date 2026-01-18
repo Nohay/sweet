@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+
+const months = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+];
+
+// 1. Récupérer tous les événements futurs
+const futureEvents = await getCollection('bujo', ({ id }) => {
+    return id.startsWith('future/');
+});
+
+// 2. Grouper les événements par mois
+const eventsByMonth = {};
+futureEvents.forEach(event => {
+    const monthIndex = event.data.publishDate.getMonth(); // 0 = Janvier, 1 = Février, etc.
+    if (!eventsByMonth[monthIndex]) {
+        eventsByMonth[monthIndex] = [];
+    }
+    eventsByMonth[monthIndex].push(event);
+});
+---
+
+<h1 class="text-3xl font-bold mb-2">Future Log</h1>
+<p class="text-slate-500 mb-8">La vue d'ensemble de l'année à venir. Les grands rendez-vous, les voyages, les jalons importants.</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {months.map((monthName, index) => (
+        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-lg mb-3 text-slate-800">{monthName} 2026</h3>
+            <div class="space-y-2">
+                {eventsByMonth[index] ? eventsByMonth[index].map(event => (
+                    <div class="text-sm p-2 bg-blue-50 rounded text-blue-800">{event.data.publishDate.getDate()} - {event.data.title}</div>
+                )) : (
+                    <div class="h-6 bg-slate-100 rounded opacity-50"></div>
+                )}
+            </div>
+        </div>
+    ))}
+</div>
