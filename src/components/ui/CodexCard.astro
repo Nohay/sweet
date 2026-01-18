@@ -1,0 +1,104 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entry: CollectionEntry<"codex">;
+}
+
+const { entry } = Astro.props;
+---
+
+<a href={`/codex/${entry.slug}`} class="codex-card">
+  <div class="card-header">
+    <div class="card-title">{entry.data.title}</div>
+    <div class="card-subtitle">{entry.data.subtitle}</div>
+    <span class={`status status-${entry.data.status.toLowerCase().replace(' ', '-')}`}>
+      {entry.data.status}
+    </span>
+  </div>
+  <div class="skill-section">
+    <div class="skill-header">Compétence</div>
+    <p class="skill-content">{entry.data.mecanique}</p>
+    <div class="skill-header">Application Concrète</div>
+    <p class="skill-content">{entry.data.vision3D}</p>
+    </div>
+</a>
+
+<style>
+  .codex-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(145deg, #fefbf3, #f8f1e4);
+    border: 2px solid #dcd0b9;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 450px; /* Largeur max pour une carte */
+  }
+
+  .codex-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: #c89b3c;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    text-align: center;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: #b8860b;
+  }
+
+  .card-subtitle {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+
+  .status {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    border: 1px solid;
+  }
+
+  .status-acquis { background-color: rgba(60, 150, 60, 0.1); border-color: rgba(60, 150, 60, 0.4); color: #3c963c; }
+  .status-en-cours { background-color: rgba(200, 155, 60, 0.15); border-color: rgba(200, 155, 60, 0.4); color: #b8860b; }
+  .status-à-explorer { background-color: rgba(100, 100, 100, 0.1); border-color: rgba(100, 100, 100, 0.3); color: #646464; }
+
+  .skill-section {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    background-color: rgba(253, 246, 232, 0.5);
+    border: 1px solid #dcd0b9;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+  }
+
+  .skill-header {
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    color: #4a4130;
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .skill-content {
+    margin: 0 0 0.75rem 0;
+    padding-left: 0.5rem;
+    border-left: 2px solid rgba(200, 155, 60, 0.3);
+  }
+</style>

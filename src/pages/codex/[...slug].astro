@@ -1,0 +1,152 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import GameLayout from "../../layouts/GameLayout.astro";
+
+export async function getStaticPaths() {
+  const codexEntries = await getCollection("codex");
+  return codexEntries.map((entry) => ({
+    params: { slug: entry.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const codexEntries = await getCollection("codex");
+
+const entry = codexEntries.find((entry) => entry.slug === slug);
+
+if (!entry) {
+  return Astro.redirect("/404");
+}
+
+const { Content } = await entry.render();
+---
+
+<GameLayout title={entry.data.title}>
+  <main class="codex-entry-container">
+    <article class="parchment-card">
+      <div class="header">
+        <h1>{entry.data.title}</h1>
+        <h2>{entry.data.subtitle}</h2>
+        <p class="publish-date">
+          Savoir acquis le : {
+            entry.data.publishDate.toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }
+        </p>
+      </div>
+
+      <div class="transmutation-table">
+        <div class="table-row header">
+          <div class="col-title">Ancien Monde (2D)</div>
+          <div class="col-title">Mécanique</div>
+          <div class="col-title">Monde de Demain (3D)</div>
+        </div>
+        <div class="table-row">
+          <div>{entry.data.concept2D}</div>
+          <div>{entry.data.mecanique}</div>
+          <div>{entry.data.vision3D}</div>
+        </div>
+      </div>
+
+      {entry.data.tags && (
+        <div class="tags-container">
+          {entry.data.tags.map((tag) => (
+            <a href={`/codex/tags/${tag.toLowerCase()}`} class="tag">{tag}</a>
+          ))}
+        </div>
+      )}
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <a href="/codex" class="back-link"> &larr; Retourner au Codex </a>
+    </article>
+  </main>
+</GameLayout>
+
+<style>
+  .codex-entry-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .parchment-card {
+    background: linear-gradient(145deg, #fefbf3, #f8f1e4);
+    border: 2px solid #dcd0b9;
+    border-radius: 15px;
+    padding: 2rem 3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .header h1 {
+    margin-bottom: 0.5rem;
+  }
+  .header h2 {
+    font-family: "EB Garamond", serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: #4a4130;
+    margin-top: 0;
+  }
+  /* On retire l'ornement pour le h2 de la carte */
+  .header h2::after {
+    content: none;
+  }
+
+  .publish-date {
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  .transmutation-table {
+    margin: 2rem 0;
+    font-size: 0.9rem;
+    background-color: rgba(253, 246, 232, 0.5);
+    border: 1px solid #dcd0b9;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1.5fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .table-row.header {
+    background-color: rgba(220, 208, 185, 0.4);
+  }
+
+  .table-row:not(.header) {
+    border-top: 1px solid #dcd0b9;
+  }
+
+  .col-title {
+    font-family: "Cinzel", serif;
+    font-weight: bold;
+    color: #4a4130;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 3rem;
+    font-family: "Cinzel", serif;
+    color: #b8860b;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .back-link:hover {
+    transform: translateX(-5px);
+  }
+</style>

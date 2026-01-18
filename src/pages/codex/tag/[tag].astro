@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import GameLayout from "../../../layouts/GameLayout.astro";
+import CodexCard from "../../../components/ui/CodexCard.astro";
+
+export async function getStaticPaths() {
+  const allCodexEntries = await getCollection("codex");
+  const allTags = allCodexEntries.flatMap((entry) => entry.data.tags);
+  const uniqueTags = [...new Set(allTags)];
+
+  return uniqueTags.map((tag) => {
+    return {
+      params: { tag: tag.toLowerCase() },
+      props: { tag },
+    };
+  });
+}
+
+const { tag } = Astro.props;
+
+const allCodexEntries = await getCollection("codex");
+
+const filteredEntries = allCodexEntries.filter((entry) =>
+  entry.data.tags.map(t => t.toLowerCase()).includes(Astro.params.tag)
+);
+---
+
+<GameLayout title={`Domaine : ${tag}`}>
+  <main class="codex-container">
+    <h1>Domaine : {tag}</h1>
+    <p>
+      Liste de tous les savoirs et mécaniques liés au domaine "{tag}".
+    </p>
+    <div class="card-grid">
+      {filteredEntries.map((entry) => <CodexCard entry={entry} />)}
+    </div>
+  </main>
+</GameLayout>

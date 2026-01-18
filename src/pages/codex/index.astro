@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import GameLayout from "../../layouts/GameLayout.astro";
+import ContentSearch from "../../components/ContentSearch.astro";
+
+// 1. Récupérer toutes les entrées du codex
+const codexEntries = await getCollection("codex");
+
+// 2. Trier les entrées par date de publication
+const sortedEntries = codexEntries.sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+// 3. Extraire tous les domaines uniques pour les catégories
+const allDomains = [...new Set(codexEntries.map(entry => entry.data.domain))];
+---
+
+<GameLayout title="Codex de la Substance">
+  <h1>Le Codex de la Substance</h1>
+  <p style="text-align: center; margin-bottom: 3rem;">
+    Le laboratoire où le pèlerin dissèque les mécanismes du réel (le code)
+    pour insuffler le "souffle de vie" (Hebel) à ses créations.
+  </p>
+  
+  <!-- On passe les entrées, les domaines (en tant que tags) et le chemin de base au composant de recherche -->
+  <ContentSearch posts={sortedEntries} tags={allDomains} basePath="codex" />
+
+</GameLayout>

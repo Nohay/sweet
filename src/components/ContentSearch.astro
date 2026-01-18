@@ -1,17 +1,18 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import GoldButton from './ui/GoldButton.astro';
+import CodexCard from './ui/CodexCard.astro';
 
 interface Props {
-	posts: CollectionEntry<'journal' | 'logs'>[];
+	posts: CollectionEntry<'journal' | 'logs' | 'codex'>[];
 	tags: string[];
-	basePath: 'journal' | 'logs';
+	basePath: 'journal' | 'logs' | 'codex';
 }
 
 const { posts, tags, basePath } = Astro.props;
 ---
 
-<div id="journal-search-component">
+<div id="content-search-component">
 	<div class="search-wrapper">
 		<input type="search" id="search-input" placeholder="Rechercher..." />
 	</div>
@@ -26,14 +27,19 @@ const { posts, tags, basePath } = Astro.props;
 	</div>
 
 	<div id="search-results" class="card-grid">
-		{
+		{basePath === 'codex' ? (
+			posts.map((post) => (
+				<CodexCard entry={post as CollectionEntry<'codex'>} />
+			))
+		) : (
 			posts.map((post) => (
 				<GoldButton
 					href={`/${basePath}/${post.slug}/`}
 					title={post.data.title}
-					body={`Publié le ${post.data.publishDate.toLocaleDateString('fr-FR')}`}
+					body={`Publié le ${new Date(post.data.publishDate).toLocaleDateString('fr-FR')}`}
 				/>
 			))
+		)
 		}
 	</div>
 	<p id="no-results" class="no-results-message" style="display: none;">
@@ -59,13 +65,51 @@ const { posts, tags, basePath } = Astro.props;
 			.replace(/[\u0300-\u036f]/g, '');
 	}
 
+	// Fonction pour créer le HTML d'une carte Codex
+	function createCodexCardHTML(post) {
+		const statusClass = post.data.status.toLowerCase().replace(' ', '-');
+		return `
+			<a href="/codex/${post.slug}" class="codex-card">
+				<div class="card-header">
+					<div class="card-title">${post.data.title}</div>
+					<div class="card-subtitle">${post.data.subtitle}</div>
+					<span class="status status-${statusClass}">${post.data.status}</span>
+				</div>
+				<div class="skill-section">
+					<div class="skill-header">Compétence</div>
+					<p class="skill-content">${post.data.mecanique}</p>
+					<div class="skill-header">Application Concrète</div>
+					<p class="skill-content">${post.data.vision3D}</p>
+				</div>
+			</a>
+		`;
+	}
+
+	// Fonction pour créer le HTML d'un GoldButton
+	function createGoldButtonHTML(post) {
+		return `
+			<a href="/${basePath}/${post.slug}/" class="gold-button">
+				<div class="title">${post.data.title}</div>
+				<p class="body">Publié le ${new Date(post.data.publishDate).toLocaleDateString('fr-FR')}</p>
+			</a>
+		`;
+	}
+
 	// Fonction pour mettre à jour l'affichage
 	function renderResults() {
 		let filteredPosts = posts;
 
 		// 1. Filtrer par balise active
 		if (activeTag !== 'all') {
-			filteredPosts = filteredPosts.filter(post => post.data.tags?.includes(activeTag));
+			// Pour le codex, on filtre par 'domain', sinon par 'tags'
+			const filterKey = basePath === 'codex' ? 'domain' : 'tags';
+			filteredPosts = filteredPosts.filter(post => {
+				const values = post.data[filterKey];
+				if (Array.isArray(values)) {
+					return values.includes(activeTag);
+				}
+				return values === activeTag; // Gère le cas où 'domain' est une simple chaîne
+			});
 		}
 
 		// 2. Filtrer par recherche textuelle
@@ -76,15 +120,10 @@ const { posts, tags, basePath } = Astro.props;
 		// 3. Mettre à jour le DOM
 		noResultsMessage.style.display = filteredPosts.length === 0 ? 'block' : 'none';
 
-		resultsContainer.innerHTML = filteredPosts
-				.map(
-					(post) =>
-						`<a href="/${basePath}/${post.slug}/" class="gold-button">
-               <div class="title">${post.data.title}</div>
-               <p class="body">Publié le ${new Date(post.data.publishDate).toLocaleDateString('fr-FR')}</p>
-             </a>`
-				)
-				.join('');
+		const resultsHTML = filteredPosts.map(post => 
+			basePath === 'codex' ? createCodexCardHTML(post) : createGoldButtonHTML(post)
+		).join('');
+		resultsContainer.innerHTML = resultsHTML;
 	}
 
 	// --- Écouteurs d'événements ---
