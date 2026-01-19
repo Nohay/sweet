@@ -1,0 +1,51 @@
+---
+title: "Daily Log - 24 Janvier 2026"
+publishDate: 2026-01-24
+tags: ["Daily", "Weekend", "Organisation"]
+---
+import Key from '~/components/bujo/Key.astro';
+
+<div class="mb-8 p-4 bg-blue-50 border-l-4 border-blue-400">
+    <h2 class="text-xl font-bold text-slate-800 mb-2"><Key symbol="⚓" /> Ancrage & Bien-être</h2>
+    <ul class="space-y-2">
+        <li><Key symbol="•" /> Routine du matin (douche, dents...)</li>
+        <li><Key symbol="•" /> Activité physique douce (étirements, marche...)</li>
+        <li><Key symbol="–" /> Qualité du sommeil (1-5) : __</li>
+        <li><Key symbol="–" /> Humeur du jour (1-5) : __</li>
+    </ul>
+</div>
+
+<div class="mb-6">
+    <h2 class="text-xl font-bold text-slate-700"><Key symbol="*" /> Objectifs du Samedi</h2>
+    <p class="text-sm text-slate-500 mb-3">Une ou deux choses pour profiter de la journée et se sentir bien.</p>
+    <ul class="space-y-2">
+        <li><Key symbol="•" /> [Objectif principal]</li>
+        <li><Key symbol="•" /> [Autre petite tâche]</li>
+    </ul>
+</div>
+
+<div class="mb-6">
+    <h2 class="text-xl font-bold text-slate-700"><Key symbol="•" /> Foyer & Organisation</h2>
+    <ul class="space-y-2">
+        <li><Key symbol="•" /> Session de rangement (15 min)</li>
+        <li><Key symbol="•" /> Tâche ménagère au choix (lessive, vaisselle...)</li>
+    </ul>
+</div>
+
+<div class="mb-6">
+    <h2 class="text-xl font-bold text-slate-700"><Key symbol="♡" /> Loisirs & Note du jour</h2>
+    <p class="text-slate-600 mt-2">Un moment pour soi, une pensée, une petite victoire :</p>
+    <textarea id="daily-note-24" class="w-full mt-2 p-2 border rounded bg-slate-50" rows="2" placeholder="..."></textarea>
+</div>
+
+<script is:inline>
+    {`
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.getElementById('daily-note-24');
+            const storageKey = 'note-/bujo/2026/01/24';
+            const savedNote = localStorage.getItem(storageKey);
+            if (savedNote) textarea.value = savedNote;
+            textarea.addEventListener('input', () => localStorage.setItem(storageKey, textarea.value));
+        });
+    `}
+</script>
